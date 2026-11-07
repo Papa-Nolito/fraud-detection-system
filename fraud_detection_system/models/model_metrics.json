@@ -1,0 +1,82 @@
+{
+  "deployed_model": "Random Forest",
+  "threshold": 0.42192469726379295,
+  "trained_at": "2026-11-07 10:32:22",
+  "dataset_rows": 20000,
+  "fraud_rate": 0.0297,
+  "train_rows": 16000,
+  "test_rows": 4000,
+  "avg_prediction_ms": 107.20813449999923,
+  "models": {
+    "Random Forest": {
+      "threshold": 0.42192469726379295,
+      "cv_f1": 0.8548387096774194,
+      "accuracy": 0.98925,
+      "precision": 0.8653846153846154,
+      "recall": 0.7563025210084033,
+      "f1": 0.8071748878923767,
+      "false_positive_rate": 0.003607317701623293,
+      "roc_auc": 0.8802136675334911,
+      "tp": 90,
+      "tn": 3867,
+      "fp": 14,
+      "fn": 29
+    },
+    "Logistic Regression": {
+      "threshold": 0.8603127231938066,
+      "cv_f1": 0.836405529953917,
+      "accuracy": 0.98925,
+      "precision": 0.8958333333333334,
+      "recall": 0.7226890756302521,
+      "f1": 0.8,
+      "false_positive_rate": 0.002576655501159495,
+      "roc_auc": 0.9013205900757624,
+      "tp": 86,
+      "tn": 3871,
+      "fp": 10,
+      "fn": 33
+    },
+    "Gradient Boosting": {
+      "threshold": 0.8410634749812842,
+      "cv_f1": 0.8209302325581396,
+      "accuracy": 0.98775,
+      "precision": 0.8365384615384616,
+      "recall": 0.7310924369747899,
+      "f1": 0.780269058295964,
+      "false_positive_rate": 0.004380314351971141,
+      "roc_auc": 0.8904206877288406,
+      "tp": 87,
+      "tn": 3864,
+      "fp": 17,
+      "fn": 32
+    },
+    "Isolation Forest (unsupervised)": {
+      "threshold": null,
+      "cv_f1": null,
+      "precision": 0.7657657657657657,
+      "recall": 0.7142857142857143,
+      "f1": 0.7391304347826088,
+      "accuracy": 0.985,
+      "false_positive_rate": 0.006699304303014687,
+      "roc_auc": 0.8970268859927377,
+      "tp": 85,
+      "tn": 3855,
+      "fp": 26,
+      "fn": 34
+    }
+  },
+  "best": {
+    "threshold": 0.42192469726379295,
+    "cv_f1": 0.8548387096774194,
+    "accuracy": 0.98925,
+    "precision": 0.8653846153846154,
+    "recall": 0.7563025210084033,
+    "f1": 0.8071748878923767,
+    "false_positive_rate": 0.003607317701623293,
+    "roc_auc": 0.8802136675334911,
+    "tp": 90,
+    "tn": 3867,
+    "fp": 14,
+    "fn": 29
+  }
+}

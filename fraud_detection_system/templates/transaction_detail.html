@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Transaction #{{ t.id }}
+  <span class="badge {{ 'high' if t.prediction=='fraud' else 'low' }}">{{ t.prediction }}</span></h1>
+<div class="grid two">
+  <div class="card">{% include "_txn_facts.html" %}</div>
+  <div class="card">
+    <h2>Why this result?</h2>
+    {% if reasons %}<ul>{% for r in reasons %}<li>{{ r }}</li>{% endfor %}</ul>
+    {% else %}<p class="muted">No unusual indicators were found.</p>{% endif %}
+    {% if t.alert_id %}<p><a class="btn" href="{{ url_for('alert_detail', alert_id=t.alert_id) }}">Open alert ({{ t.alert_status.replace('_',' ') }})</a></p>{% endif %}
+    <p><a href="{{ url_for('transactions') }}">&larr; Back to transactions</a></p>
+  </div>
+</div>
+{% endblock %}

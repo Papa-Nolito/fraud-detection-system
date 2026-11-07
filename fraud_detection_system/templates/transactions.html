@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block autorefresh %}1{% endblock %}
+{% block content %}
+<h1>Transaction monitoring</h1>
+<form method="get" class="filters card">
+  <input name="q" value="{{ q }}" placeholder="Search account ID">
+  <select name="prediction">
+    <option value="">All results</option>
+    <option value="fraud" {{ 'selected' if pred=='fraud' }}>Flagged fraud</option>
+    <option value="legitimate" {{ 'selected' if pred=='legitimate' }}>Legitimate</option>
+  </select>
+  <button class="btn small">Filter</button>
+  <span class="muted">{{ total }} result(s)</span>
+</form>
+<div class="card scroll">
+<table>
+  <tr><th>#</th><th>Time</th><th>Account</th><th>Amount</th><th>Category</th><th>Channel</th><th>Country</th><th>Probability</th><th>Result</th><th></th></tr>
+  {% for r in rows %}
+  <tr class="{{ 'row-fraud' if r.prediction=='fraud' }}">
+    <td>{{ r.id }}</td><td>{{ r.txn_time }}</td><td>{{ r.account_id }}</td><td>{{ r.amount|kes }}</td>
+    <td>{{ r.merchant_category.replace('_',' ') }}</td><td>{{ r.channel }}</td><td>{{ r.country }}</td>
+    <td>{{ r.fraud_probability|pct }}</td>
+    <td><span class="badge {{ 'high' if r.prediction=='fraud' else 'low' }}">{{ r.prediction }}</span></td>
+    <td><a href="{{ url_for('transaction_detail', txn_id=r.id) }}">View</a></td></tr>
+  {% else %}<tr><td colspan="10" class="muted">No transactions found.</td></tr>
+  {% endfor %}
+</table>
+</div>
+<div class="pager">
+  {% if page > 1 %}<a class="btn small ghost" href="{{ url_for('transactions', page=page-1, q=q, prediction=pred) }}">&larr; Prev</a>{% endif %}
+  <span>Page {{ page }} of {{ pages }}</span>
+  {% if page < pages %}<a class="btn small ghost" href="{{ url_for('transactions', page=page+1, q=q, prediction=pred) }}">Next &rarr;</a>{% endif %}
+</div>
+{% endblock %}

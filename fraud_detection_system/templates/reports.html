@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Reports</h1>
+<form method="get" class="filters card">
+  <label>From <input type="date" name="from" value="{{ frm }}"></label>
+  <label>To <input type="date" name="to" value="{{ to }}"></label>
+  <button class="btn small">Apply</button>
+  <a class="btn small ghost" href="{{ url_for('export_csv', **{'from': frm, 'to': to}) }}">Download CSV</a>
+</form>
+
+<div class="card">
+  <h2>Transaction monitoring report</h2>
+  <div class="grid stats">
+    <div class="stat"><span>Transactions</span><strong>{{ summary.total }}</strong></div>
+    <div class="stat"><span>Flagged</span><strong>{{ summary.flagged }}</strong></div>
+    <div class="stat"><span>Total volume</span><strong>{{ summary.volume|kes }}</strong></div>
+    <div class="stat"><span>Value flagged</span><strong>{{ summary.flagged_amount|kes }}</strong></div>
+    <div class="stat"><span>Avg. scoring time</span><strong>{{ '%.1f'|format(summary.avg_ms) }} ms</strong></div>
+  </div>
+  <table>
+    <tr><th>Merchant category</th><th>Transactions</th><th>Flagged</th><th>Flag rate</th></tr>
+    {% for c in by_cat %}<tr><td>{{ c.cat.replace('_',' ') }}</td><td>{{ c.total }}</td><td>{{ c.flagged }}</td>
+      <td>{{ ((c.flagged / c.total) if c.total else 0)|pct }}</td></tr>
+    {% else %}<tr><td colspan="4" class="muted">No data in this range.</td></tr>{% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h2>Analyst feedback (live accuracy)</h2>
+  <p>Open: <strong>{{ fb.get('open',0) }}</strong> &middot; Confirmed fraud: <strong>{{ fb.get('confirmed_fraud',0) }}</strong>
+     &middot; False positives: <strong>{{ fb.get('false_positive',0) }}</strong></p>
+  <p>{% if live_precision is not none %}Of {{ reviewed }} reviewed alerts, <strong>{{ live_precision|pct }}</strong> were real fraud (live precision).
+     {% else %}<span class="muted">No alerts have been reviewed yet.</span>{% endif %}</p>
+</div>
+
+<div class="card">
+  <h2>Fraud detection performance report (ML model)</h2>
+  {% if metrics %}
+  <p>Deployed model: <strong>{{ metrics.deployed_model }}</strong> &middot; decision threshold {{ '%.3f'|format(metrics.threshold) }}
+     &middot; trained {{ metrics.trained_at }} on {{ metrics.train_rows }} rows, tested on {{ metrics.test_rows }} unseen rows
+     &middot; avg. prediction time {{ '%.1f'|format(metrics.avg_prediction_ms) }} ms.</p>
+  <table>
+    <tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>False-positive rate</th><th>ROC-AUC</th></tr>
+    {% for name, m in metrics.models.items() %}
+    <tr class="{{ 'row-best' if name == metrics.deployed_model }}"><td>{{ name }}</td><td>{{ m.accuracy|pct }}</td><td>{{ m.precision|pct }}</td>
+      <td>{{ m.recall|pct }}</td><td>{{ m.f1|pct }}</td><td>{{ m.false_positive_rate|pct }}</td><td>{{ '%.3f'|format(m.roc_auc) }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">No model metrics found. Run <code>python train_model.py</code>.</p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+account_id,amount,merchant_category,channel,country,distance_from_home_km,new_device
+ACC1192,3437.45,restaurants,pos,KE,0.81,0
+ACC1012,2723.7,fuel,pos,KE,0.33,0
+ACC1395,1880.02,groceries,pos,KE,1.9,0
+ACC1105,4336.73,crypto,web,KE,95.87,1
+ACC1303,1453.19,clothing,web,KE,24.82,0
+ACC1151,2938.05,groceries,mobile,KE,10.4,0
+ACC1454,2578.94,transfers,mobile,KE,21.3,0
+ACC1267,1523.13,groceries,pos,KE,2.95,0
+ACC1478,46786.54,electronics,mobile,KE,104.13,0
+ACC1149,9426.86,crypto,web,ZA,908.03,0
+ACC1420,49537.27,crypto,web,AE,63.14,0
+ACC1133,1663.11,fuel,pos,KE,84.4,0

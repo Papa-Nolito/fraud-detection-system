@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Alert #{{ a.id }} <span class="badge {{ t.risk_level }}">{{ t.risk_level }} risk</span></h1>
+<div class="grid two">
+  <div class="card">{% include "_txn_facts.html" %}</div>
+  <div>
+    <div class="card">
+      <h2>Why was it flagged?</h2>
+      {% if reasons %}<ul>{% for r in reasons %}<li>{{ r }}</li>{% endfor %}</ul>
+      {% else %}<p class="muted">The model combined several small signals.</p>{% endif %}
+    </div>
+    <div class="card">
+      <h2>Analyst review</h2>
+      <p>Status: <strong>{{ a.status.replace('_',' ') }}</strong>
+        {% if a.reviewer %}<span class="muted">- by {{ a.reviewer }} on {{ a.reviewed_at }}</span>{% endif %}</p>
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label>Notes <textarea name="notes" rows="3" maxlength="500">{{ a.notes or '' }}</textarea></label>
+        <button class="btn danger" name="decision" value="confirmed_fraud">Confirm fraud</button>
+        <button class="btn" name="decision" value="false_positive">Mark as false positive</button>
+      </form>
+    </div>
+  </div>
+</div>
+<p><a href="{{ url_for('alerts') }}">&larr; Back to alerts</a></p>
+{% endblock %}

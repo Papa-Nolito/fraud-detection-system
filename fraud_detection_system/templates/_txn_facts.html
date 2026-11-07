@@ -1,0 +1,14 @@
+<table class="facts">
+  <tr><th>Account</th><td>{{ t.account_id }}</td></tr>
+  <tr><th>Amount</th><td>{{ t.amount|kes }}</td></tr>
+  <tr><th>Time</th><td>{{ t.txn_time }}</td></tr>
+  <tr><th>Merchant category</th><td>{{ t.merchant_category.replace('_',' ') }}</td></tr>
+  <tr><th>Channel / country</th><td>{{ t.channel }} / {{ t.country }}</td></tr>
+  <tr><th>Distance from home</th><td>{{ t.distance_from_home_km }} km</td></tr>
+  <tr><th>New device</th><td>{{ 'Yes' if t.new_device else 'No' }}</td></tr>
+  <tr><th>Transactions in 24 h</th><td>{{ t.txn_count_24h }}</td></tr>
+  <tr><th>Amount vs. usual</th><td>{{ '%.2f'|format(t.amount_ratio) }}x</td></tr>
+  <tr><th>Fraud probability</th><td><strong>{{ t.fraud_probability|pct }}</strong></td></tr>
+  <tr><th>Risk level</th><td><span class="badge {{ t.risk_level }}">{{ t.risk_level }}</span></td></tr>
+  <tr><th>Scoring time</th><td>{{ '%.1f'|format(t.processing_ms) }} ms</td></tr>
+</table>

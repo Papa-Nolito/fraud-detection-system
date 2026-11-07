@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block autorefresh %}1{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="grid stats">
+  <div class="card stat"><span>Transactions analysed</span><strong>{{ stats.total }}</strong></div>
+  <div class="card stat danger"><span>Flagged as fraud</span><strong>{{ stats.flagged }}</strong><small>{{ stats.rate|pct }} of all</small></div>
+  <div class="card stat warn"><span>Open alerts</span><strong>{{ stats.open_alerts }}</strong><small><a href="{{ url_for('alerts') }}">Review now</a></small></div>
+  <div class="card stat"><span>Value flagged</span><strong>{{ stats.flagged_amount|kes }}</strong></div>
+  <div class="card stat"><span>Avg. scoring time</span><strong>{{ '%.1f'|format(stats.avg_ms) }} ms</strong></div>
+</div>
+
+<div class="grid two">
+  <div class="card"><h2>Last 14 days</h2><canvas id="trend" height="150"></canvas></div>
+  <div class="card"><h2>Risk levels</h2><canvas id="risk" height="150"></canvas></div>
+</div>
+
+<div class="card">
+  <h2>Latest alerts</h2>
+  {% if recent %}
+  <table>
+    <tr><th>Time</th><th>Account</th><th>Amount</th><th>Risk</th><th>Probability</th><th>Status</th><th></th></tr>
+    {% for r in recent %}
+    <tr><td>{{ r.created_at }}</td><td>{{ r.account_id }}</td><td>{{ r.amount|kes }}</td>
+      <td><span class="badge {{ r.risk_level }}">{{ r.risk_level }}</span></td>
+      <td>{{ r.fraud_probability|pct }}</td><td>{{ r.status.replace('_',' ') }}</td>
+      <td><a href="{{ url_for('alert_detail', alert_id=r.alert_id) }}">Open</a></td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">No alerts yet. Submit a transaction or run <code>python init_db.py --demo</code>.</p>{% endif %}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+  const trend = {{ trend|tojson }};
+  const risk = {{ risk|tojson }};
+  new Chart(document.getElementById('trend'), {
+    type: 'bar',
+    data: { labels: trend.map(t => t.d.slice(5)),
+      datasets: [
+        { label: 'All transactions', data: trend.map(t => t.total), backgroundColor: '#9db7e8' },
+        { label: 'Flagged fraud', data: trend.map(t => t.fraud), backgroundColor: '#d64545' } ] },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+  new Chart(document.getElementById('risk'), {
+    type: 'doughnut',
+    data: { labels: ['Low', 'Medium', 'High'],
+      datasets: [{ data: [risk.low || 0, risk.medium || 0, risk.high || 0],
+                   backgroundColor: ['#3aa66b', '#e8a317', '#d64545'] }] }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Sign in - Fraud Detection System{% endblock %}
+{% block content %}
+<div class="login-box card">
+  <h1>&#128737; FraudGuard AI</h1>
+  <p class="muted">AI-based real-time fraud detection. Sign in to continue.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Email <input type="email" name="email" required autofocus></label>
+    <label>Password <input type="password" name="password" required></label>
+    <button class="btn">Sign in</button>
+  </form>
+</div>
+{% endblock %}

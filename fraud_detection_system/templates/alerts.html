@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block autorefresh %}1{% endblock %}
+{% block content %}
+<h1>Fraud alerts</h1>
+<div class="tabs">
+  {% for key, label in [('open','Open'),('confirmed_fraud','Confirmed fraud'),('false_positive','False positives'),('all','All')] %}
+  <a class="{{ 'active' if status==key }}" href="{{ url_for('alerts', status=key) }}">{{ label }}</a>{% endfor %}
+</div>
+<div class="card scroll">
+<table>
+  <tr><th>Alert</th><th>Raised</th><th>Account</th><th>Amount</th><th>Risk</th><th>Probability</th><th>Status</th><th></th></tr>
+  {% for r in rows %}
+  <tr><td>#{{ r.id }}</td><td>{{ r.created_at }}</td><td>{{ r.account_id }}</td><td>{{ r.amount|kes }}</td>
+    <td><span class="badge {{ r.risk_level }}">{{ r.risk_level }}</span></td><td>{{ r.fraud_probability|pct }}</td>
+    <td>{{ r.status.replace('_',' ') }}</td><td><a href="{{ url_for('alert_detail', alert_id=r.id) }}">Review</a></td></tr>
+  {% else %}<tr><td colspan="8" class="muted">Nothing here.</td></tr>{% endfor %}
+</table>
+</div>
+{% endblock %}
